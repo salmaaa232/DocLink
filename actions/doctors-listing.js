@@ -29,3 +29,5 @@ export async function getDoctorsBySpecialty(specialty) {
     return { error: "Failed to fetch doctors" };
   }
 }
+
+

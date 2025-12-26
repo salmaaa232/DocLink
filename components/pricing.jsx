@@ -1,7 +1,13 @@
-
+import React from "react"
+import { CardContent } from "./ui/card"
+import { PricingTable } from '@clerk/nextjs';
 const Pricing = () => {
   return (
-    <div className="py-20">Pricing component</div>
+    <card>
+      <CardContent>
+        <PricingTable />
+      </CardContent>
+    </card>
   )
 }
 

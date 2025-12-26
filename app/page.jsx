@@ -2,16 +2,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import SubscribeButton from "@/components/subscribe-button";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import Pricing from "@/components/pricing";
 
 /**
  * ✅ Replace these with your REAL Clerk plan IDs (cplan_...)
  * NOT the "Plan Key" (premium/standard)
  */
 const plans = [
+  { id: "cplan_FREE_ID_HERE", name: "Free", price: "$0" },
   { id: "cplan_STANDARD_ID_HERE", name: "Standard", price: "$100 / month" },
   { id: "cplan_PREMIUM_ID_HERE", name: "Premium", price: "$200 / month" },
-  { id: "cplan_FREE_ID_HERE", name: "Free", price: "$0" },
 ];
+
 
 const howItWorks = [
   {
@@ -104,20 +107,36 @@ export default function Home() {
               </p>
 
               <div className="mt-6 flex flex-wrap items-center gap-3">
-                <Link
-                  href="/doctors"
-                  className="rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
-                >
-                  Find doctors
-                </Link>
-                <Link
-                  href="/get-started"
-                  className="group inline-flex items-center gap-2 rounded-full bg-teal-800 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-700"
-                >
-                  Get started
-                  <span className="transition-transform group-hover:translate-x-0.5">→</span>
-                </Link>
-              </div>
+  <Link
+    href="/doctors"
+    className="rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
+  >
+    Find doctors
+  </Link>
+
+  <SignedOut>
+  <Link
+    href="/sign-in?redirect_url=/appointments"
+    className="group inline-flex items-center gap-2 rounded-full bg-teal-800 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-700"
+  >
+    Get started
+    <span className="transition-transform group-hover:translate-x-0.5">→</span>
+  </Link>
+</SignedOut>
+
+
+  <SignedIn>
+    {/* Logged in -> go to dashboard/next page */}
+    <Link
+      href="/appointments"
+      className="group inline-flex items-center gap-2 rounded-full bg-teal-800 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-700"
+    >
+      Get started
+      <span className="transition-transform group-hover:translate-x-0.5">→</span>
+    </Link>
+  </SignedIn>
+</div>
+
             </div>
 
             {/* Right image */}
@@ -152,43 +171,103 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ✅ Consultation packages (SUBSCRIBE WORKS HERE) */}
-      <section id="consultation-packages" className="scroll-mt-24 bg-slate-900 py-10">
-        <div className="mx-auto w-full max-w-6xl px-4">
-          <div className="flex flex-col items-center text-center">
-            <span className="rounded-full bg-slate-800 px-4 py-2 text-xs font-semibold text-white">
-              Affordable Healthcare
-            </span>
 
-            <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-              Consultation packages
-            </h2>
+{/* ✅ Consultation packages (better UI, no grey placeholder) */}
+<section
+  id="consultation-packages"
+  className="scroll-mt-24 bg-slate-900 py-12"
+>
+  <div className="mx-auto w-full max-w-6xl px-4">
+    <div className="flex flex-col items-center text-center">
+      <span className="rounded-full bg-slate-800 px-4 py-2 text-xs font-semibold text-white">
+        Affordable Healthcare
+      </span>
 
-            <p className="mt-2 max-w-xl text-sm text-slate-300">
-              choose the perfect consultation package that fits your health care needs
-            </p>
-          </div>
+      <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+        Consultation packages
+      </h2>
 
-          <div className="mt-10 rounded-2xl bg-slate-800/60 p-6 ring-1 ring-white/10">
-            <div className="grid gap-6 md:grid-cols-3">
-              {plans.map((p) => (
-                <div key={p.id} className="rounded-xl bg-slate-200 p-6">
-                  <div className="h-44 rounded-lg bg-slate-300" />
+      <p className="mt-2 max-w-xl text-sm text-slate-300">
+        Choose the perfect consultation package that fits your health care needs
+      </p>
+    </div>
 
-                  <div className="mt-4">
-                    <p className="text-sm font-bold text-slate-900">{p.name}</p>
-                    <p className="text-xs text-slate-600">{p.price}</p>
-                  </div>
+    <div className="mt-10 rounded-3xl bg-slate-800/60 p-6 ring-1 ring-white/10">
+      <div className="grid gap-6 md:grid-cols-3">
+        {plans.map((p) => (
+          <div
+            key={p.id}
+            className="rounded-3xl bg-slate-50 p-6 shadow-sm ring-1 ring-slate-200"
+          >
+            {/* Top */}
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="text-lg font-extrabold text-slate-900">
+                  {p.name}
+                </h3>
+                <p className="mt-1 text-sm font-semibold text-slate-900">
+                  {p.price}
+                </p>
+                <p className="mt-1 text-xs text-slate-600">
+                  {p.name === "Standard"
+                    ? "Get 10 credits for up to 5 consultations"
+                    : p.name === "Premium"
+                    ? "Get 24 credits for up to 12 consultations"
+                    : "1 free consultation using 2 free credits"}
+                </p>
+              </div>
 
-                  {/* ✅ THIS is what makes subscribe open Clerk checkout */}
-                  <SubscribeButton planId={p.id} planPeriod="month" />
-                </div>
-              ))}
+              <span className="rounded-full bg-teal-100 px-3 py-1 text-xs font-semibold text-teal-800 ring-1 ring-teal-200">
+                {p.name === "Standard"
+                  ? "10 Credits"
+                  : p.name === "Premium"
+                  ? "24 Credits"
+                  : "2 Credits"}
+              </span>
             </div>
-          </div>
-        </div>
-      </section>
 
+            {/* Divider */}
+            <div className="my-5 h-px w-full bg-slate-200" />
+
+            {/* Features */}
+            <ul className="space-y-3">
+              {(p.name === "Standard"
+                ? ["Verified doctors", "Video consultations", "Appointment history"]
+                : p.name === "Premium"
+                ? ["Priority booking", "Verified doctors", "Medical documentation"]
+                : ["Always free", "Verified doctors", "Video consultations"]
+              ).map((f) => (
+                <li key={f} className="flex items-start gap-2 text-sm text-slate-700">
+                  <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-teal-100 text-teal-800 ring-1 ring-teal-200">
+                    <CheckIcon />
+                  </span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+
+            {/* Button */}
+            <div className="mt-6">
+              {p.name === "Free" ? (
+                <Link
+                  href="/sign-up"
+                  className="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-900 hover:bg-slate-50"
+                >
+                  Create free account
+                </Link>
+              ) : (
+                <button className="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-900 hover:bg-slate-50" > Subscribe </button>
+              )}
+            </div>
+
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+      
       {/* Credit system */}
       <section className="bg-white py-16">
         <div className="mx-auto w-full max-w-6xl px-4">
@@ -299,7 +378,7 @@ export default function Home() {
                 </Link>
 
                 <Link
-                  href="/pricing"
+                  href="/#consultation-packages"
                   className="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50"
                 >
                   View Pricing
