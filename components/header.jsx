@@ -1,34 +1,40 @@
 import { checkAndAllocateCredits } from "@/actions/credits";
 import { checkUser } from "@/lib/checkUser";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import {
-    Calendar,
-    CreditCard,
-    ShieldCheck,
-    Stethoscope,
-    User,
-} from "lucide-react";
+import { Calendar, CreditCard, ShieldCheck, Stethoscope, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 
 export default async function Header() {
-  const user = await checkUser();
+  // ✅ Never let header crash the whole app if auth/backend fails
+  let user = null;
+  try {
+    user = await checkUser();
+  } catch (e) {
+    user = null;
+  }
 
+  // ✅ Only attempt credit allocation if we definitely have a patient user
   if (user?.role === "PATIENT") {
-    await checkAndAllocateCredits(user);
+    try {
+      await checkAndAllocateCredits(user);
+    } catch (e) {
+      // ignore to prevent breaking render
+    }
   }
 
   return (
     <header
-      className="
-        fixed top-0 w-full z-10 border-b
-        bg-background/95 dark:bg-background/80
-        backdrop-blur-md
-        supports-[backdrop-filter]:bg-background/80
-      "
+  className="
+    fixed top-0 left-0 right-0 z-50 border-b
+    bg-background/95 dark:bg-background/80
+    backdrop-blur-md
+    supports-[backdrop-filter]:bg-background/80
+  "
     >
+
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 cursor-pointer">
@@ -38,6 +44,7 @@ export default async function Header() {
             width={200}
             height={60}
             className="h-10 w-auto object-contain"
+            priority
           />
         </Link>
 
@@ -47,17 +54,11 @@ export default async function Header() {
             {/* Admin */}
             {user?.role === "ADMIN" && (
               <Link href="/admin">
-                <Button
-                  variant="outline"
-                  className="hidden md:inline-flex items-center gap-2"
-                >
+                <Button variant="outline" className="hidden md:inline-flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4" />
                   Admin Dashboard
                 </Button>
-                <Button
-                  variant="ghost"
-                  className="md:hidden w-10 h-10 p-0"
-                >
+                <Button variant="ghost" className="md:hidden w-10 h-10 p-0">
                   <ShieldCheck className="h-4 w-4" />
                 </Button>
               </Link>
@@ -66,17 +67,11 @@ export default async function Header() {
             {/* Doctor */}
             {user?.role === "DOCTOR" && (
               <Link href="/doctor">
-                <Button
-                  variant="outline"
-                  className="hidden md:inline-flex items-center gap-2"
-                >
+                <Button variant="outline" className="hidden md:inline-flex items-center gap-2">
                   <Stethoscope className="h-4 w-4" />
                   Doctor Dashboard
                 </Button>
-                <Button
-                  variant="ghost"
-                  className="md:hidden w-10 h-10 p-0"
-                >
+                <Button variant="ghost" className="md:hidden w-10 h-10 p-0">
                   <Stethoscope className="h-4 w-4" />
                 </Button>
               </Link>
@@ -85,17 +80,11 @@ export default async function Header() {
             {/* Patient */}
             {user?.role === "PATIENT" && (
               <Link href="/appointments">
-                <Button
-                  variant="outline"
-                  className="hidden md:inline-flex items-center gap-2"
-                >
+                <Button variant="outline" className="hidden md:inline-flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
                   My Appointments
                 </Button>
-                <Button
-                  variant="ghost"
-                  className="md:hidden w-10 h-10 p-0"
-                >
+                <Button variant="ghost" className="md:hidden w-10 h-10 p-0">
                   <Calendar className="h-4 w-4" />
                 </Button>
               </Link>
@@ -104,17 +93,11 @@ export default async function Header() {
             {/* Unassigned */}
             {user?.role === "UNASSIGNED" && (
               <Link href="/onboarding">
-                <Button
-                  variant="outline"
-                  className="hidden md:inline-flex items-center gap-2"
-                >
+                <Button variant="outline" className="hidden md:inline-flex items-center gap-2">
                   <User className="h-4 w-4" />
                   Complete Profile
                 </Button>
-                <Button
-                  variant="ghost"
-                  className="md:hidden w-10 h-10 p-0"
-                >
+                <Button variant="ghost" className="md:hidden w-10 h-10 p-0">
                   <User className="h-4 w-4" />
                 </Button>
               </Link>
@@ -123,7 +106,7 @@ export default async function Header() {
 
           {/* Credits / Pricing Badge */}
           {(!user || user?.role !== "ADMIN") && (
-            <div href={user?.role === "PATIENT" ? "/pricing" : "/doctor"} >
+            <Link href={user?.role === "PATIENT" ? "/pricing" : "/pricing"}>
               <Badge
                 variant="outline"
                 className="
@@ -138,9 +121,7 @@ export default async function Header() {
                     <>
                       {user.credits}{" "}
                       <span className="hidden md:inline">
-                        {user?.role === "PATIENT"
-                          ? "Credits"
-                          : "Earned Credits"}
+                        {user?.role === "PATIENT" ? "Credits" : "Earned Credits"}
                       </span>
                     </>
                   ) : (
@@ -148,7 +129,7 @@ export default async function Header() {
                   )}
                 </span>
               </Badge>
-            </div>
+            </Link>
           )}
 
           {/* Auth */}

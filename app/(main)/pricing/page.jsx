@@ -1,16 +1,16 @@
-import Pricing from "@/components/pricing";
+// app/pricing/page.jsx
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { PricingTable } from "@clerk/nextjs";
 
-export default async function PricingPage() {
+export default function PricingPage() {
   return (
-    <div className="container mx-auto px-4 py-22">
-      {/* Header Section */}
+    <div className="container mx-auto px-4 py-24">
       <div className="flex justify-start mb-2">
         <Link
           href="/"
-          className="flex items-center text-muted-foreground hover:text-white transition-colors"
+          className="flex items-center text-muted-foreground hover:text-black transition-colors"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Home
@@ -25,7 +25,7 @@ export default async function PricingPage() {
           Affordable Healthcare
         </Badge>
 
-        <h1 className="text-4xl md:text-5xl font-bold gradient-title mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">
           Clear & Flexible Plans
         </h1>
 
@@ -34,10 +34,10 @@ export default async function PricingPage() {
         </p>
       </div>
 
-      {/* Pricing Table Section */}
-      <Pricing />
+      <div className="max-w-6xl mx-auto">
+        <PricingTable newSubscriptionRedirectUrl="/pricing?subscribed=1" />
+      </div>
 
-      {/* FAQ Section - Optional */}
       <div className="max-w-3xl mx-auto mt-16 text-center">
         <h2 className="text-2xl font-bold text-black mb-2">
           If you have any questions
