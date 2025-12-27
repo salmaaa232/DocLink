@@ -5,7 +5,7 @@ import Link from "next/link";
 const SpecialitiesPage = () => {
   return (
     <>
-      <div className="flex flex-col items-center justify-center mt-10 mb-8 text-center">
+      <div className="flex flex-col items-center justify-center mt-10 mb-10 text-center">
         <span className="inline-flex rounded-full bg-teal-100 px-4 py-2 text-xs font-semibold text-teal-800 ring-1 ring-teal-200">
           Browse Specialties
         </span>
@@ -19,7 +19,7 @@ const SpecialitiesPage = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
         {SPECIALTIES.map((speciality) => (
           <Link
             key={speciality.name}
@@ -27,7 +27,7 @@ const SpecialitiesPage = () => {
             className="group block"
           >
             <Card className="h-full rounded-2xl border border-slate-200 bg-slate-50 shadow-sm transition hover:-translate-y-0.5 hover:bg-white hover:shadow-md">
-              <CardContent className="flex h-full flex-col items-center justify-center p-5 text-center">
+              <CardContent className="flex h-full min-h-[160px] flex-col items-center justify-center p-5 text-center">
                 {/* Icon bubble */}
                 <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white ring-1 ring-slate-200 transition group-hover:ring-teal-200">
                   <span className="text-teal-800">{speciality.icon}</span>
@@ -38,10 +38,8 @@ const SpecialitiesPage = () => {
                   {speciality.name}
                 </h3>
 
-                {/* Sub text (optional, keeps cards equal height) */}
-                <p className="mt-1 text-xs text-slate-500">
-                  View doctors
-                </p>
+                {/* Sub text */}
+                <p className="mt-1 text-xs text-slate-500">View doctors</p>
               </CardContent>
             </Card>
           </Link>

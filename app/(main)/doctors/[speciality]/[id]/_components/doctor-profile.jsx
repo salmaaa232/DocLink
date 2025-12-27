@@ -50,13 +50,13 @@ export function DoctorProfile({ doctor, availableDays }) {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10 max-w-6xl mx-auto px-4 sm:px-6">
       {/* Left column */}
       <div className="md:col-span-1">
         <div className="md:sticky md:top-24">
-          <Card className="border border-border/60 shadow-sm">
-            <CardContent className="pt-6">
-              <div className="flex flex-col items-center text-center gap-4">
+          <Card className="rounded-2xl border border-border/60 shadow-sm">
+            <CardContent className="pt-6 px-6 pb-6">
+              <div className="flex flex-col items-center text-center gap-5">
                 {/* Avatar */}
                 <div className="relative h-32 w-32 overflow-hidden rounded-full bg-muted">
                   {doctor.imageUrl ? (
@@ -78,7 +78,7 @@ export function DoctorProfile({ doctor, availableDays }) {
                     Dr. {doctor.name}
                   </h2>
 
-                  <Badge variant="secondary" className="mt-2">
+                  <Badge variant="secondary" className="mt-2 px-3 py-1">
                     {doctor.specialty}
                   </Badge>
                 </div>
@@ -108,10 +108,10 @@ export function DoctorProfile({ doctor, availableDays }) {
       </div>
 
       {/* Right column */}
-      <div className="md:col-span-2 space-y-6">
+      <div className="md:col-span-2 space-y-8">
         {/* About */}
-        <Card className="border border-border/60 shadow-sm">
-          <CardHeader>
+        <Card className="rounded-2xl border border-border/60 shadow-sm">
+          <CardHeader className="px-6 pt-6">
             <CardTitle className="text-lg font-semibold">
               About Dr. {doctor.name}
             </CardTitle>
@@ -120,7 +120,7 @@ export function DoctorProfile({ doctor, availableDays }) {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-8 px-6">
             <section className="space-y-2">
               <div className="flex items-center gap-2">
                 <FileText className="h-5 w-5 text-primary" />
@@ -160,8 +160,8 @@ export function DoctorProfile({ doctor, availableDays }) {
         {/* Booking section */}
         {showBooking && (
           <div id="booking-section">
-            <Card className="border border-border/60 shadow-sm">
-              <CardHeader>
+            <Card className="rounded-2xl border border-border/60 shadow-sm gap-6">
+              <CardHeader className="px-6 pt-6">
                 <CardTitle className="text-lg font-semibold">
                   Book an Appointment
                 </CardTitle>
@@ -170,7 +170,7 @@ export function DoctorProfile({ doctor, availableDays }) {
                 </CardDescription>
               </CardHeader>
 
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-6 px-6">
                 {totalSlots > 0 ? (
                   <>
                     {!selectedSlot && (
@@ -190,7 +190,7 @@ export function DoctorProfile({ doctor, availableDays }) {
                     )}
                   </>
                 ) : (
-                  <div className="py-10 text-center">
+                  <div className="py-10 text-center px-4">
                     <Calendar className="mx-auto mb-3 h-10 w-10 text-muted-foreground" />
                     <h3 className="font-semibold text-foreground">
                       No available slots

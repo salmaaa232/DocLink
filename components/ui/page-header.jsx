@@ -18,9 +18,9 @@ export function PageHeader({
   backLabel = "Back to Home",
 }) {
   return (
-    <div className="mb-0 mt-10">
+    <div className="mb-6 mt-10">
       {/* Back button */}
-      <div className="mb-0">
+      <div className="mb-4 md:mb-0">
         <Link href={backLink}>
           <Button
             variant="ghost"

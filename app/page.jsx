@@ -128,7 +128,7 @@ export default function Home() {
   <SignedIn>
     {/* Logged in -> go to dashboard/next page */}
     <Link
-      href="/onboarding"
+      href="/dashboard"
       className="group inline-flex items-center gap-2 rounded-full bg-teal-800 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-700"
     >
       Get started
