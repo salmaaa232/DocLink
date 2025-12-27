@@ -59,9 +59,12 @@ export function DoctorCard({ doctor }) {
             {doctor.experience} years experience
           </p>
 
-          <p className="mt-3 text-sm text-slate-600 line-clamp-2">
+          {/* <p className="mt-3 text-sm text-slate-600 line-clamp-2">
             {doctor.description || "Experienced doctor ready to help you."}
-          </p>
+          </p> */}
+          <p className="text-slate-600 break-words whitespace-pre-wrap mt-3 text-sm text-slate-600 line-clamp-2">
+          {doctor.description || "Experienced doctor ready to help you."}
+         </p>
 
           <Button
             asChild
