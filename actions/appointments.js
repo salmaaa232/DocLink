@@ -306,13 +306,20 @@ export async function getAvailableTimeSlots(doctorId) {
       },
     });
 
-    if (!availability) {
-      throw new Error("No availability set by doctor");
-    }
-
     // Get the next 4 days
     const now = new Date();
     const days = [now, addDays(now, 1), addDays(now, 2), addDays(now, 3)];
+
+    // If doctor has not set availability, return empty slots for the next 4 days
+    if (!availability) {
+      const result = days.map((date) => ({
+        date: format(date, "yyyy-MM-dd"),
+        displayDate: format(date, "EEEE, MMMM d"),
+        slots: [],
+      }));
+
+      return { days: result };
+    }
 
     // Fetch existing appointments for the doctor over the next 4 days
     const lastDay = endOfDay(days[3]);
