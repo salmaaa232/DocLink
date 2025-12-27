@@ -5,8 +5,10 @@ export const metadata = {
 
 export default async function DoctorsLayout({ children }) {
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="max-w-6xl mx-auto">{children}</div>
+    <div className="bg-white">
+      <div className="container mx-auto px-4 py-10 sm:py-14">
+        <div className="mx-auto w-full max-w-6xl">{children}</div>
+      </div>
     </div>
   );
 }
