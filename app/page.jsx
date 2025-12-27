@@ -116,7 +116,7 @@ export default function Home() {
 
   <SignedOut>
   <Link
-    href="/sign-in?redirect_url=/appointments"
+    href="/onboarding"
     className="group inline-flex items-center gap-2 rounded-full bg-teal-800 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-700"
   >
     Get started
@@ -128,7 +128,7 @@ export default function Home() {
   <SignedIn>
     {/* Logged in -> go to dashboard/next page */}
     <Link
-      href="/appointments"
+      href="/onboarding"
       className="group inline-flex items-center gap-2 rounded-full bg-teal-800 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-700"
     >
       Get started
