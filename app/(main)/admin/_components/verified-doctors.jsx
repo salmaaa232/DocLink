@@ -64,115 +64,148 @@ export function VerifiedDoctors({ doctors }) {
   }, [data]);
 
   return (
-<div>
-  <Card>
-    <CardHeader>
-      <div>
-        <div>
-          <CardTitle>Manage Doctors</CardTitle>
-          <CardDescription>
-            View and manage all verified doctors
-          </CardDescription>
-        </div>
+  <div className="space-y-6">
+    {/* Header */}
+    <div className="rounded-3xl border border-slate-200 bg-[#dff1f1] px-6 py-8 shadow-sm">
+      <span className="inline-flex rounded-full bg-teal-100 px-4 py-2 text-xs font-semibold text-teal-800 ring-1 ring-teal-200">
+        Admin • Doctors
+      </span>
 
-        <div>
-          <Search />
-          <Input
-            placeholder="Search doctors..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+      <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900">
+        Manage Doctors
+      </h2>
+      <p className="mt-2 max-w-2xl text-sm text-slate-600 sm:text-base">
+        View and manage all verified doctors. You can suspend or reinstate accounts.
+      </p>
+
+      {/* Search */}
+      <div className="mt-6 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+        <Search className="h-4 w-4 text-slate-500" />
+        <Input
+          className="border-0 bg-transparent p-0 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+          placeholder="Search by name, specialty, or email..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
-    </CardHeader>
+    </div>
 
-    <CardContent>
-      {filteredDoctors.length === 0 ? (
+    {/* List container */}
+    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="flex items-center justify-between px-6 py-4">
         <div>
-          {searchTerm
-            ? "No doctors match your search criteria."
-            : "No verified doctors available."}
+          <p className="text-sm font-semibold text-slate-900">Doctors</p>
+          <p className="text-xs text-slate-500">
+            {filteredDoctors.length} result{filteredDoctors.length === 1 ? "" : "s"}
+          </p>
+        </div>
+
+        <Badge
+          variant="outline"
+          className="border-slate-200 bg-slate-50 text-slate-700"
+        >
+          Verified list
+        </Badge>
+      </div>
+
+      <div className="h-px w-full bg-slate-100" />
+
+      {filteredDoctors.length === 0 ? (
+        <div className="px-6 py-10 text-center">
+          <p className="text-sm font-semibold text-slate-900">
+            {searchTerm ? "No doctors match your search." : "No verified doctors available."}
+          </p>
+          <p className="mt-2 text-sm text-slate-600">
+            Try a different keyword or check back later.
+          </p>
         </div>
       ) : (
-        <div>
+        <ul className="divide-y divide-slate-100">
           {filteredDoctors.map((doctor) => {
-            const isSuspended =
-              doctor.verificationStatus === "REJECTED";
+            const isSuspended = doctor.verificationStatus === "REJECTED";
+            const isRowLoading = loading && targetDoctor?.id === doctor.id;
 
             return (
-              <Card key={doctor.id}>
-                <CardContent>
-                  <div>
-                    <div>
-                      <div>
-                        <User />
-                      </div>
-
-                      <div>
-                        <h3>{doctor.name}</h3>
-                        <p>
-                          {doctor.specialty} • {doctor.experience} years
-                          experience
-                        </p>
-                        <p>{doctor.email}</p>
-                      </div>
+              <li key={doctor.id} className="px-6 py-5">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  {/* Left info */}
+                  <div className="flex items-start gap-4">
+                    <div className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-100 ring-1 ring-slate-200">
+                      <User className="h-5 w-5 text-slate-600" />
                     </div>
 
-                    <div>
-                      {isSuspended ? (
-                        <>
-                          <Badge variant="outline">Suspended</Badge>
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="text-sm font-bold text-slate-900">
+                          {doctor.name}
+                        </p>
 
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              handleStatusChange(doctor, false)
-                            }
-                            disabled={loading}
-                          >
-                            {loading &&
-                            targetDoctor?.id === doctor.id ? (
-                              <Loader2 />
-                            ) : (
-                              <Check />
-                            )}
-                            Reinstate
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Badge variant="outline">Active</Badge>
+                        <Badge
+                          variant="outline"
+                          className="border-slate-200 bg-slate-50 text-slate-700"
+                        >
+                          {doctor.specialty}
+                        </Badge>
 
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              handleStatusChange(doctor, true)
-                            }
-                            disabled={loading}
-                          >
-                            {loading &&
-                            targetDoctor?.id === doctor.id ? (
-                              <Loader2 />
-                            ) : (
-                              <Ban />
-                            )}
-                            Suspend
-                          </Button>
-                        </>
-                      )}
+                        {isSuspended ? (
+                          <Badge className="bg-rose-50 text-rose-700 ring-1 ring-rose-200">
+                            Suspended
+                          </Badge>
+                        ) : (
+                          <Badge className="bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200">
+                            Active
+                          </Badge>
+                        )}
+                      </div>
+
+                      <p className="text-sm text-slate-600">
+                        {doctor.experience} years experience
+                      </p>
+
+                      <p className="text-xs text-slate-500">{doctor.email}</p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+
+                  {/* Actions */}
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                    {isSuspended ? (
+                      <Button
+                        variant="outline"
+                        className="h-10 rounded-xl border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
+                        onClick={() => handleStatusChange(doctor, false)}
+                        disabled={loading}
+                      >
+                        {isRowLoading ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <Check className="mr-2 h-4 w-4" />
+                        )}
+                        Reinstate
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        className="h-10 rounded-xl border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100"
+                        onClick={() => handleStatusChange(doctor, true)}
+                        disabled={loading}
+                      >
+                        {isRowLoading ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <Ban className="mr-2 h-4 w-4" />
+                        )}
+                        Suspend
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
-    </CardContent>
-  </Card>
-</div>
+    </div>
+  </div>
+);
 
-  );
 }
