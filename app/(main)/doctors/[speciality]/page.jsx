@@ -18,7 +18,7 @@ const { doctors, error } = await getDoctorsBySpecialty(decodedSpeciality);
 <PageHeader title={speciality} backLink="/doctors" backLabel="All Specialties" />
 
       {doctors && doctors.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
           {doctors.map((doctor) => (
             <DoctorCard key={doctor.id} doctor={doctor} />
           ))}
