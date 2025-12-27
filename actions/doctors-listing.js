@@ -7,16 +7,18 @@ import { db } from "@/lib/prisma";
  */
 export async function getDoctorsBySpecialty(specialty) {
   try {
-    // minimal guard so .split doesn't crash
-    if (!specialty) {
+    const normalized = decodeURIComponent(String(specialty || "")).replace(/\s+/g, ' ').trim();
+
+    if (!normalized) {
       return { doctors: [], error: "Missing specialty" };
     }
 
+    // match exact specialty saved on the user record (case-sensitive as stored in DB)
     const doctors = await db.user.findMany({
       where: {
         role: "DOCTOR",
         verificationStatus: "VERIFIED",
-        specialty: specialty.split("%20").join(" "),
+        specialty: normalized,
       },
       orderBy: {
         name: "asc",

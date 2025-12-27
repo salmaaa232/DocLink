@@ -3,10 +3,11 @@ import { DoctorCard } from "@/components/ui/doctor-card";
 import { PageHeader } from "@/components/ui/page-header";
 
 export default async function DoctorSpecialtyPage({ params }) {
-  const { speciality }=  params;
+  const { speciality } = await params;
 
 
-const { doctors, error } = await getDoctorsBySpecialty(speciality);
+const decodedSpeciality = decodeURIComponent(String(speciality || "")).trim();
+const { doctors, error } = await getDoctorsBySpecialty(decodedSpeciality);
 
   if (error) {
     console.error("Error fetching doctors:", error);
@@ -24,7 +25,7 @@ const { doctors, error } = await getDoctorsBySpecialty(speciality);
         </div>
       ) : (
         <div className="text-center py-12">
-          <h3 className="text-xl font-medium text-blaack mb-2">No doctors available</h3>
+          <h3 className="text-xl font-medium text-black mb-2">No doctors available</h3>
           <p className="text-muted-foreground">
             There are currently no verified doctors in this specialty. Please check back later or choose another specialty.
           </p>
